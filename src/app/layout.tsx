@@ -31,7 +31,7 @@ export default function RootLayout({
           </Link>
         </header>
 
-        <main className="flex flex-col items-center justify-between h-[85vh]">
+        <main className="flex flex-col items-center justify-evenly h-[85vh]">
           {children}
         </main>
 
