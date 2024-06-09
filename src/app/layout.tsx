@@ -19,25 +19,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      
+
       <body className={inter.className}>
 
-      <header className="flex justify-center h-[3.5vh] items-center my-[2vh]">
-        
-        <Link href="/">
-          <div className="text-6xl font-semibold transition title">
-            N  R  G
-          </div>
-        </Link>
-      </header>
+        <header className="flex justify-center h-[3.5vh] items-center my-[2vh]">
 
-      <main className="flex flex-col items-center justify-between h-[85vh]">
-        {children}
+          <Link href="/">
+            <div className="text-6xl font-semibold transition title">
+              N  R  G
+            </div>
+          </Link>
+        </header>
+
+        <main className="flex flex-col items-center justify-between h-[85vh]">
+          {children}
         </main>
 
         <footer className="flex justify-center h-[3.5vh] items-center my-[2vh]">
           <div>Website designed by Brandon Nguyen</div>
-        </footer>  
+        </footer>
       </body>
     </html>
   );
