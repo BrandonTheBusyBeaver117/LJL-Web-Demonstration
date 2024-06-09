@@ -22,7 +22,7 @@ export default function RootLayout({
 
       <body className={inter.className}>
 
-        <header className="flex justify-center h-[3.5vh] items-center my-[2vh]">
+        <header className="flex justify-center h-[12.5vh] items-center">
 
           <Link href="/">
             <div className="text-6xl font-semibold transition title">
@@ -31,11 +31,11 @@ export default function RootLayout({
           </Link>
         </header>
 
-        <main className="flex flex-col items-center justify-evenly h-[85vh]">
+        <main className="flex flex-col items-center justify-evenly h-[80vh]">
           {children}
         </main>
 
-        <footer className="flex justify-center h-[3.5vh] items-center my-[2vh]">
+        <footer className="flex justify-center h-[7.5vh] items-center">
           <div>Website designed by Brandon Nguyen</div>
         </footer>
       </body>
