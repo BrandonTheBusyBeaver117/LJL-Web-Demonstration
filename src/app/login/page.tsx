@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import React, { useState, useEffect } from "react"
 import { auth } from "@/app/firebase/config"
 
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"
 import AuthForm from "../components/authform"
 import Error from "../components/error"
 import Link from "next/link"
@@ -13,7 +13,7 @@ import Link from "next/link"
 
 const signup: React.FC = () => {
 
-    const [createUserWithEmailAndPassword, user, loading, error] = useCreateUserWithEmailAndPassword(auth)
+    const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth)
 
     const router = useRouter()
 
@@ -27,6 +27,8 @@ const signup: React.FC = () => {
             return;
         }
 
+        console.log(error?.message)
+
     }, [error, user])
 
 
@@ -35,7 +37,7 @@ const signup: React.FC = () => {
         e.preventDefault()
 
         try {
-            const res = await createUserWithEmailAndPassword(email, password)
+            const res = await signInWithEmailAndPassword(email, password)
         }
         catch (error) {
             console.log(error)
@@ -53,9 +55,11 @@ const signup: React.FC = () => {
             <div className="max-w-md w-full bg-white p-8 rounded-lg">
 
                 <Error
-                    disabledSupplier={() => checkErrorDisabled("Firebase: Error (auth/invalid-email).")}
-                    message="Please enter a valid email"
-                />
+                    disabledSupplier={() => checkErrorDisabled("Firebase: Error (auth/invalid-credential).")}
+                    message="Either your email or password is incorrect. Need to make an account? Go to the "
+                >
+                    <Link href="/signup" className="text-blue-400 underline">Sign Up page</Link>
+                </Error>
 
 
                 <h2 className="text-2xl font-bold mb-6 text-gray-900">Log In</h2>
