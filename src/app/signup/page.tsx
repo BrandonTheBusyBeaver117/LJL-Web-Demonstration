@@ -3,9 +3,11 @@
 import { useRouter } from "next/navigation"
 import React, { useState, useEffect } from "react"
 import { auth } from "@/app/firebase/config"
-import Error, { ErrorType } from "../components/error"
 
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
+import AuthForm from "../components/authform"
+import Error from "../components/error"
+import Link from "next/link"
 
 
 
@@ -18,8 +20,6 @@ const signup: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [errorType, setErrorType] = useState<ErrorType>(ErrorType.NONE)
-
     useEffect(() => {
 
         if (!error && user) {
@@ -27,27 +27,11 @@ const signup: React.FC = () => {
             return;
         }
 
-        if (error) {
-            console.log(error.message)
-
-            if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-                setErrorType(ErrorType.EMAIL_IN_USE)
-            } else if (error.message === "Firebase: Error (auth/invalid-email).") {
-                setErrorType(ErrorType.INVALID_EMAIL)
-            } else if (error.message === "Firebase: Password should be at least 6 characters (auth/weak-password).") {
-                setErrorType(ErrorType.WEAK_PASSWORD)
-            }
-            else {
-                setErrorType(ErrorType.UNKNOWN)
-            }
-
-        }
-
     }, [error, user])
 
 
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent, email: string, password: string) => {
         e.preventDefault()
 
         try {
@@ -59,47 +43,40 @@ const signup: React.FC = () => {
         }
     };
 
-
+    // The error popup should be disabled if the message doesn't match
+    const checkErrorDisabled = (errorValue: string) => {
+        return error?.message !== errorValue
+    }
 
     return (
         <>
             <div className="max-w-md w-full bg-white p-8 rounded-lg">
-                <Error error={errorType}></Error>
+
+                <Error
+                    disabledSupplier={() => checkErrorDisabled("Firebase: Error (auth/invalid-email).")}
+                    message="Please enter a valid email"
+                />
+                <Error
+                    disabledSupplier={() => checkErrorDisabled("Firebase: Error (auth/email-already-in-use).")}
+                    message="Email is already in use, please navigate to the"
+                >
+                    <Link href="/Login" className="text-blue-400 underline"> Login page</Link>
+                </Error>
+                <Error
+                    disabledSupplier={() => checkErrorDisabled("Firebase: Password should be at least 6 characters (auth/weak-password).")}
+                    message="Choose a stronger password, with more than 6 characters"
+                />
+
                 <h2 className="text-2xl font-bold mb-6 text-gray-900">Sign Up</h2>
-                <form onSubmit={e => handleSubmit(e)}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 focus:outline-none focus:bg-indigo-700"
-                    >
-                        Sign Up
-                    </button>
-                </form>
+
+                <AuthForm
+                    label="Sign Up"
+                    email={email}
+                    setEmail={setEmail}
+                    password={password}
+                    setPassword={setPassword}
+                    handleSubmit={handleSubmit}
+                />
             </div>
         </>
     );
