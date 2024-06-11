@@ -16,11 +16,7 @@ jobs:
           node-version: "18"
           cache: "npm"
 
-      - name: Format
-        
-        run: |
-          npm run pretty
-
+     
       - name: Build
         
         run: |

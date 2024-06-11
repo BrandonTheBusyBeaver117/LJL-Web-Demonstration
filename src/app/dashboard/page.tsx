@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import Loading from '../components/loading';
 
-
 const dashboard: React.FC = () => {
   const router = useRouter();
 
