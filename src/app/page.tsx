@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { auth } from './firebase/config';
 import Loading from './components/loading';
 
-export default function Home() {
+const Home: React.FC = () => {
   const [user] = useAuthState(auth);
 
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function Home() {
     } else {
       setResolved(true);
     }
-  }, [userAuth, authLoading]);
+  }, [userAuth, authLoading, router]);
 
   useEffect(() => {
     if (user) {
@@ -66,3 +66,5 @@ export default function Home() {
     </>
   );
 }
+
+export default Home

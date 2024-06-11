@@ -11,7 +11,7 @@ import Error from '../components/error';
 import Link from 'next/link';
 import Loading from '../components/loading';
 
-const signup: React.FC = () => {
+const Signup: React.FC = () => {
   const router = useRouter();
 
   const [userAuth, authLoading] = useAuthState(auth);
@@ -27,7 +27,7 @@ const signup: React.FC = () => {
     } else {
       setResolved(true);
     }
-  }, [userAuth, authLoading]);
+  }, [userAuth, authLoading, router]);
 
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
@@ -112,4 +112,4 @@ const signup: React.FC = () => {
   );
 };
 
-export default signup;
+export default Signup;

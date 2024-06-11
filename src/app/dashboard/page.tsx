@@ -8,13 +8,8 @@ import { useEffect, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import Loading from '../components/loading';
 
-type DashboardProps = {
-  params: {
-    id: string;
-  };
-};
 
-const dashboard: React.FC<DashboardProps> = ({ params }) => {
+const dashboard: React.FC = () => {
   const router = useRouter();
 
   const [resolved, setResolved] = useState<boolean>(false);
@@ -28,7 +23,7 @@ const dashboard: React.FC<DashboardProps> = ({ params }) => {
     } else {
       setResolved(true);
     }
-  }, [userAuth, authLoading]);
+  }, [userAuth, authLoading, router]);
 
   // Too lazy to get the user's name or anything from the form
   // I'll just read them back their email

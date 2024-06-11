@@ -10,7 +10,7 @@ import Error from '../components/error';
 import Link from 'next/link';
 import Loading from '../components/loading';
 
-const login: React.FC = () => {
+const Login: React.FC = () => {
   const router = useRouter();
 
   const [userAuth, authLoading] = useAuthState(auth);
@@ -40,7 +40,7 @@ const login: React.FC = () => {
     }
 
     console.log(error?.message);
-  }, [error, user]);
+  }, [error, user, router]);
 
   const handleSubmit = async (e: React.FormEvent, email: string, password: string) => {
     e.preventDefault();
@@ -87,4 +87,4 @@ const login: React.FC = () => {
   );
 };
 
-export default login;
+export default Login;
