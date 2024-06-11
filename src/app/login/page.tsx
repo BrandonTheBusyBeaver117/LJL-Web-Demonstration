@@ -1,101 +1,90 @@
-"use client"
+'use client';
 
-import { useRouter } from "next/navigation"
-import React, { useState, useEffect } from "react"
-import { auth } from "@/app/firebase/config"
+import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { auth } from '@/app/firebase/config';
 
-import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"
-import AuthForm from "../components/authform"
-import Error from "../components/error"
-import Link from "next/link"
-import Loading from "../components/loading"
-
-
+import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import AuthForm from '../components/authform';
+import Error from '../components/error';
+import Link from 'next/link';
+import Loading from '../components/loading';
 
 const login: React.FC = () => {
+  const router = useRouter();
 
-    const router = useRouter()
+  const [userAuth, authLoading] = useAuthState(auth);
+  const [resolved, setResolved] = useState<boolean>(false);
 
-    const [userAuth, authLoading] = useAuthState(auth)
-    const [resolved, setResolved] = useState<boolean>(false)
+  useEffect(() => {
+    console.log(authLoading);
+    if (authLoading) return;
+    console.log(userAuth);
 
-    useEffect(() => {
+    if (userAuth) {
+      return router.push('/dashboard');
+    } else {
+      setResolved(true);
+    }
+  }, [userAuth, authLoading]);
 
-        console.log(authLoading)
-        if (authLoading) return;
-        console.log(userAuth)
+  const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
 
-        if (userAuth) {
-            return router.push("/dashboard")
-        } else {
-            setResolved(true)
-        }
-    }, [userAuth, authLoading])
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth)
-
-
-
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    useEffect(() => {
-
-        if (!error && user) {
-            router.push("/dashboard")
-            return;
-        }
-
-        console.log(error?.message)
-
-    }, [error, user])
-
-
-
-    const handleSubmit = async (e: React.FormEvent, email: string, password: string) => {
-        e.preventDefault()
-
-        try {
-            await signInWithEmailAndPassword(email, password)
-        }
-        catch (error) {
-            console.log(error)
-            return;
-        }
-    };
-
-    // The error popup should be disabled if the message doesn't match
-    const checkErrorDisabled = (errorValue: string) => {
-        return error?.message !== errorValue
+  useEffect(() => {
+    if (!error && user) {
+      router.push('/dashboard');
+      return;
     }
 
+    console.log(error?.message);
+  }, [error, user]);
 
+  const handleSubmit = async (e: React.FormEvent, email: string, password: string) => {
+    e.preventDefault();
 
-    return (!resolved ? <Loading /> :
-        <>
-            <div className="max-w-md w-full bg-white p-8 rounded-lg">
+    try {
+      await signInWithEmailAndPassword(email, password);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
 
-                <Error
-                    disabledSupplier={() => checkErrorDisabled("Firebase: Error (auth/invalid-credential).")}
-                    message="Either your email or password is incorrect. Need to make an account? Go to the "
-                >
-                    <Link href="/signup" className="text-blue-400 underline">Sign Up page</Link>
-                </Error>
+  // The error popup should be disabled if the message doesn't match
+  const checkErrorDisabled = (errorValue: string) => {
+    return error?.message !== errorValue;
+  };
 
+  return !resolved ? (
+    <Loading />
+  ) : (
+    <>
+      <div className="w-full max-w-md rounded-lg bg-white p-8">
+        <Error
+          disabledSupplier={() => checkErrorDisabled('Firebase: Error (auth/invalid-credential).')}
+          message="Either your email or password is incorrect. Need to make an account? Go to the "
+        >
+          <Link href="/signup" className="text-blue-400 underline">
+            Sign Up page
+          </Link>
+        </Error>
 
-                <h2 className="text-2xl font-bold mb-6 text-gray-900">Log In</h2>
+        <h2 className="mb-6 text-2xl font-bold text-gray-900">Log In</h2>
 
-                <AuthForm
-                    label="Log In"
-                    email={email}
-                    setEmail={setEmail}
-                    password={password}
-                    setPassword={setPassword}
-                    handleSubmit={handleSubmit}
-                />
-            </div>
-        </>
-    );
-}
+        <AuthForm
+          label="Log In"
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          handleSubmit={handleSubmit}
+        />
+      </div>
+    </>
+  );
+};
 
-export default login
+export default login;
