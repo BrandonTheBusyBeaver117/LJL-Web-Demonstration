@@ -4,18 +4,37 @@ import { useRouter } from "next/navigation"
 import React, { useState, useEffect } from "react"
 import { auth } from "@/app/firebase/config"
 
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"
+import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"
 import AuthForm from "../components/authform"
 import Error from "../components/error"
 import Link from "next/link"
+import Loading from "../components/loading"
 
 
 
-const signup: React.FC = () => {
+const login: React.FC = () => {
+
+    const router = useRouter()
+
+    const [userAuth, authLoading] = useAuthState(auth)
+    const [resolved, setResolved] = useState<boolean>(false)
+
+    useEffect(() => {
+
+        console.log(authLoading)
+        if (authLoading) return;
+        console.log(userAuth)
+
+        if (userAuth) {
+            return router.push("/dashboard")
+        } else {
+            setResolved(true)
+        }
+    }, [userAuth, authLoading])
 
     const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth)
 
-    const router = useRouter()
+
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -37,7 +56,7 @@ const signup: React.FC = () => {
         e.preventDefault()
 
         try {
-            const res = await signInWithEmailAndPassword(email, password)
+            await signInWithEmailAndPassword(email, password)
         }
         catch (error) {
             console.log(error)
@@ -50,7 +69,9 @@ const signup: React.FC = () => {
         return error?.message !== errorValue
     }
 
-    return (
+
+
+    return (!resolved ? <Loading /> :
         <>
             <div className="max-w-md w-full bg-white p-8 rounded-lg">
 
@@ -77,4 +98,4 @@ const signup: React.FC = () => {
     );
 }
 
-export default signup
+export default login

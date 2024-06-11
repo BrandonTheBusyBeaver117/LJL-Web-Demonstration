@@ -4,38 +4,70 @@ import { useRouter } from "next/navigation"
 import React, { useState, useEffect } from "react"
 import { auth } from "@/app/firebase/config"
 
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
+import { useAuthState, useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
+import { setPersistence, browserLocalPersistence } from "firebase/auth"
 import AuthForm from "../components/authform"
 import Error from "../components/error"
 import Link from "next/link"
+import Loading from "../components/loading"
 
 
 
 const signup: React.FC = () => {
+    const router = useRouter()
+
+    const [userAuth, authLoading] = useAuthState(auth)
+    const [resolved, setResolved] = useState<boolean>(false)
+
+    useEffect(() => {
+
+        console.log(authLoading)
+        if (authLoading) return;
+        console.log(userAuth)
+
+        if (userAuth) {
+            return router.push("/dashboard")
+        } else {
+            setResolved(true)
+        }
+
+
+    }, [userAuth, authLoading])
+
 
     const [createUserWithEmailAndPassword, user, loading, error] = useCreateUserWithEmailAndPassword(auth)
 
-    const router = useRouter()
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+
     useEffect(() => {
 
+        const login = async () => {
+            try {
+                await setPersistence(auth, browserLocalPersistence)
+                router.push("/dashboard")
+            } catch {
+                console.log("something went really wrong")
+            }
+
+        }
+
         if (!error && user) {
-            router.push("/dashboard")
+            login()
+
             return;
         }
 
     }, [error, user])
 
 
-
     const handleSubmit = async (e: React.FormEvent, email: string, password: string) => {
         e.preventDefault()
 
         try {
-            const res = await createUserWithEmailAndPassword(email, password)
+            await createUserWithEmailAndPassword(email, password)
         }
         catch (error) {
             console.log(error)
@@ -48,10 +80,9 @@ const signup: React.FC = () => {
         return error?.message !== errorValue
     }
 
-    return (
+    return (!resolved ? <Loading /> :
         <>
             <div className="max-w-md w-full bg-white p-8 rounded-lg">
-
                 <Error
                     disabledSupplier={() => checkErrorDisabled("Firebase: Error (auth/invalid-email).")}
                     message="Please enter a valid email"
@@ -77,6 +108,8 @@ const signup: React.FC = () => {
                     setPassword={setPassword}
                     handleSubmit={handleSubmit}
                 />
+
+
             </div>
         </>
     );

@@ -1,8 +1,42 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
 
+import { useEffect, useState } from "react";
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/navigation";
+import { auth } from "./firebase/config";
+import Loading from "./components/loading";
+
 export default function Home() {
-  return (
+
+  const [user] = useAuthState(auth)
+
+  const router = useRouter()
+
+  const [resolved, setResolved] = useState<boolean>(false)
+  const [userAuth, authLoading] = useAuthState(auth)
+
+  useEffect(() => {
+
+    if (authLoading) return;
+
+    if (userAuth) {
+      return router.push("/dashboard")
+    } else {
+      setResolved(true)
+    }
+  }, [userAuth, authLoading])
+
+  useEffect(() => {
+    if (user) {
+      return router.push("/dashboard")
+    }
+  }, [user])
+
+  return (!resolved ? <Loading /> :
     <>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
@@ -33,17 +67,17 @@ export default function Home() {
         <h1>Get started with the most amazing website in the world</h1>
       </div>
 
-      <div className = "flex w-1/5 h-12 justify-between ">
-        <Link className = "bg-slate-100 rounded-full basis-1/3 flex justify-center items-center transition ease-in-out hover:-translate-y-1 hover:bg-sky-200 duration-300"
-              href = "/login">
+      <div className="flex w-1/5 h-12 justify-between ">
+        <Link className="bg-slate-100 rounded-full basis-1/3 flex justify-center items-center transition ease-in-out hover:-translate-y-1 hover:bg-sky-200 duration-300"
+          href="/login">
           <div >Log in</div>
         </Link>
 
-        <Link className = "bg-slate-100 rounded-full basis-1/3 flex justify-center items-center transition ease-in-out hover:-translate-y-1 hover:bg-sky-200 duration-300"
-              href = "/signup">
+        <Link className="bg-slate-100 rounded-full basis-1/3 flex justify-center items-center transition ease-in-out hover:-translate-y-1 hover:bg-sky-200 duration-300"
+          href="/signup">
           <div >Sign up</div>
         </Link>
-  
+
       </div>
 
       <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
