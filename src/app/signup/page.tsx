@@ -12,7 +12,6 @@ import Link from "next/link"
 import Loading from "../components/loading"
 
 
-
 const signup: React.FC = () => {
     const router = useRouter()
 
