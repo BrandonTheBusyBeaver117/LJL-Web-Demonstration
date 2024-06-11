@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { signOut } from 'firebase/auth';
 import Loading from '../components/loading';
 
-const dashboard: React.FC = () => {
+const Dashboard: React.FC = () => {
   const router = useRouter();
 
   const [resolved, setResolved] = useState<boolean>(false);
@@ -60,4 +60,4 @@ const dashboard: React.FC = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;
