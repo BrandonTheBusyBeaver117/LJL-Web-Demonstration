@@ -11,8 +11,6 @@ import { auth } from './firebase/config';
 import Loading from './components/loading';
 
 const Home: React.FC = () => {
-
-
   // Initializing router
   const router = useRouter();
 
@@ -22,7 +20,6 @@ const Home: React.FC = () => {
 
   // Use Effect to check when authentication changes
   useEffect(() => {
-
     // If authentication hasn't finished, exit
     if (authLoading) return;
 

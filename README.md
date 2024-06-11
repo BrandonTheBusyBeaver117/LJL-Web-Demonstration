@@ -28,7 +28,7 @@ When you're finished with your changes, here's what you need to do to deploy:
 
 1. Format the project by running 
 ```
-npm run prettier
+npm run pretty
 ``` 
 2. Ensure that you're on a feat/ branch
 

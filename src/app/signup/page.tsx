@@ -12,7 +12,6 @@ import Link from 'next/link';
 import Loading from '../components/loading';
 
 const Signup: React.FC = () => {
-
   // Initializing router
   const router = useRouter();
 
@@ -22,7 +21,6 @@ const Signup: React.FC = () => {
 
   // Use Effect to check when authentication changes
   useEffect(() => {
-
     // If authentication hasn't finished, exit
     if (authLoading) return;
 
@@ -42,7 +40,6 @@ const Signup: React.FC = () => {
   // Getting email and password state to pass into the form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
 
   useEffect(() => {
     const login = async () => {

@@ -9,7 +9,6 @@ import { signOut } from 'firebase/auth';
 import Loading from '../components/loading';
 
 const Dashboard: React.FC = () => {
-
   // Initializing router
   const router = useRouter();
 
@@ -19,7 +18,6 @@ const Dashboard: React.FC = () => {
 
   // Use Effect to check when authentication changes
   useEffect(() => {
-
     // If authentication hasn't finished, exit
     if (authLoading) return;
 

@@ -11,7 +11,6 @@ import Link from 'next/link';
 import Loading from '../components/loading';
 
 const Login: React.FC = () => {
-
   // Initializing router
   const router = useRouter();
 
@@ -21,7 +20,6 @@ const Login: React.FC = () => {
 
   // Use Effect to check when authentication changes
   useEffect(() => {
-
     // If authentication hasn't finished, exit
     if (authLoading) return;
 
@@ -47,7 +45,6 @@ const Login: React.FC = () => {
       router.push('/dashboard');
       return;
     }
-
   }, [error, user, router]);
 
   // Handling form submit
