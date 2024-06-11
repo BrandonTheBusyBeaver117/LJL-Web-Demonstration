@@ -11,16 +11,23 @@ import { auth } from './firebase/config';
 import Loading from './components/loading';
 
 const Home: React.FC = () => {
-  const [user] = useAuthState(auth);
 
+
+  // Initializing router
   const router = useRouter();
 
-  const [resolved, setResolved] = useState<boolean>(false);
+  // Initializing variables to track if user is authenticated
   const [userAuth, authLoading] = useAuthState(auth);
+  const [resolved, setResolved] = useState<boolean>(false);
 
+  // Use Effect to check when authentication changes
   useEffect(() => {
+
+    // If authentication hasn't finished, exit
     if (authLoading) return;
 
+    // If the user is authenticated, redirect them to the dashboard
+    // Otherwise, the authentication has been resolved, and we should show the user the signup page
     if (userAuth) {
       return router.push('/dashboard');
     } else {
@@ -28,12 +35,17 @@ const Home: React.FC = () => {
     }
   }, [userAuth, authLoading, router]);
 
+  // Getting user from authstate
+  const [user] = useAuthState(auth);
+
+  // Logging in when there's no errors and a user exists
   useEffect(() => {
     if (user) {
       return router.push('/dashboard');
     }
   }, [user, router]);
 
+  // If not resolved, show the loading page, otherwise show the page
   return !resolved ? (
     <Loading />
   ) : (

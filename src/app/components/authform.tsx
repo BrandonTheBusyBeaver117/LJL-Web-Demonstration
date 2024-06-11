@@ -11,6 +11,7 @@ type AuthFormProps = {
   handleSubmit: (event: React.FormEvent, email: string, password: string) => void;
 };
 
+// A form that just handles email and password input
 const AuthForm: React.FC<AuthFormProps> = ({
   label,
   email,

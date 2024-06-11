@@ -11,16 +11,22 @@ import Link from 'next/link';
 import Loading from '../components/loading';
 
 const Login: React.FC = () => {
+
+  // Initializing router
   const router = useRouter();
 
+  // Initializing variables to track if user is authenticated
   const [userAuth, authLoading] = useAuthState(auth);
   const [resolved, setResolved] = useState<boolean>(false);
 
+  // Use Effect to check when authentication changes
   useEffect(() => {
-    console.log(authLoading);
-    if (authLoading) return;
-    console.log(userAuth);
 
+    // If authentication hasn't finished, exit
+    if (authLoading) return;
+
+    // If the user is authenticated, redirect them to the dashboard
+    // Otherwise, the authentication has been resolved, and we should show the user the login page
     if (userAuth) {
       return router.push('/dashboard');
     } else {
@@ -28,23 +34,28 @@ const Login: React.FC = () => {
     }
   }, [userAuth, authLoading, router]);
 
+  // Using the firebase hook to get a sign in user function with email and pw
   const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
 
+  // Getting email and password state to pass into the form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Logging in when there's no errors and a user exists
   useEffect(() => {
     if (!error && user) {
       router.push('/dashboard');
       return;
     }
 
-    console.log(error?.message);
   }, [error, user, router]);
 
+  // Handling form submit
   const handleSubmit = async (e: React.FormEvent, email: string, password: string) => {
+    // Prevents clearing of form data on submit
     e.preventDefault();
 
+    // Signing in user
     try {
       await signInWithEmailAndPassword(email, password);
     } catch (error) {
@@ -58,6 +69,7 @@ const Login: React.FC = () => {
     return error?.message !== errorValue;
   };
 
+  // If not resolved, show the loading page, otherwise show the page
   return !resolved ? (
     <Loading />
   ) : (

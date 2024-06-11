@@ -12,16 +12,22 @@ import Link from 'next/link';
 import Loading from '../components/loading';
 
 const Signup: React.FC = () => {
+
+  // Initializing router
   const router = useRouter();
 
+  // Initializing variables to track if user is authenticated
   const [userAuth, authLoading] = useAuthState(auth);
   const [resolved, setResolved] = useState<boolean>(false);
 
+  // Use Effect to check when authentication changes
   useEffect(() => {
-    console.log(authLoading);
-    if (authLoading) return;
-    console.log(userAuth);
 
+    // If authentication hasn't finished, exit
+    if (authLoading) return;
+
+    // If the user is authenticated, redirect them to the dashboard
+    // Otherwise, the authentication has been resolved, and we should show the user the signup page
     if (userAuth) {
       return router.push('/dashboard');
     } else {
@@ -29,22 +35,29 @@ const Signup: React.FC = () => {
     }
   }, [userAuth, authLoading, router]);
 
+  // Using the firebase hook to get a create user function with email and pw
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
 
+  // Getting email and password state to pass into the form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
 
   useEffect(() => {
     const login = async () => {
       try {
+        // When logging in, make sure they're remembered
         await setPersistence(auth, browserLocalPersistence);
+
+        // Redirect them to dashboard
         router.push('/dashboard');
       } catch {
         console.log('something went really wrong');
       }
     };
 
+    // If there's a user and nothing has gone wrong, log in
     if (!error && user) {
       login();
 
@@ -52,9 +65,12 @@ const Signup: React.FC = () => {
     }
   }, [error, user, router]);
 
+  // Handles submits
   const handleSubmit = async (e: React.FormEvent, email: string, password: string) => {
+    // Prevents clearing of form data on submit
     e.preventDefault();
 
+    // Trying to create user
     try {
       await createUserWithEmailAndPassword(email, password);
     } catch (error) {
@@ -68,6 +84,7 @@ const Signup: React.FC = () => {
     return error?.message !== errorValue;
   };
 
+  // If not resolved, show the loading page, otherwise show the page
   return !resolved ? (
     <Loading />
   ) : (
