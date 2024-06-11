@@ -32,7 +32,7 @@ const Home: React.FC = () => {
     if (user) {
       return router.push('/dashboard');
     }
-  }, [user]);
+  }, [user, router]);
 
   return !resolved ? (
     <Loading />

@@ -26,7 +26,7 @@ const Login: React.FC = () => {
     } else {
       setResolved(true);
     }
-  }, [userAuth, authLoading]);
+  }, [userAuth, authLoading, router]);
 
   const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
 

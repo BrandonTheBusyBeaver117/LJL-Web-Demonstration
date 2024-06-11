@@ -50,7 +50,7 @@ const Signup: React.FC = () => {
 
       return;
     }
-  }, [error, user]);
+  }, [error, user, router]);
 
   const handleSubmit = async (e: React.FormEvent, email: string, password: string) => {
     e.preventDefault();
