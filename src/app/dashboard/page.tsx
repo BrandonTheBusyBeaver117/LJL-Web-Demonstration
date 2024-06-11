@@ -15,10 +15,6 @@ type DashboardProps = {
 }
 
 const dashboard: React.FC<DashboardProps> = ({ params }) => {
-    console.log(params)
-
-    const name = "[Someone]"
-
     const router = useRouter()
 
     const [resolved, setResolved] = useState<boolean>(false)
@@ -36,6 +32,9 @@ const dashboard: React.FC<DashboardProps> = ({ params }) => {
     }, [userAuth, authLoading])
 
 
+    // Too lazy to get the user's name or anything from the form
+    // I'll just read them back their email
+    const name = userAuth?.email
 
     return (!resolved ? <Loading /> :
         <>
